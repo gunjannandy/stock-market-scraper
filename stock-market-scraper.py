@@ -14,6 +14,7 @@ from IPython.display import display, HTML
 from multiprocessing.dummy import Pool
 from bs4 import BeautifulSoup
 import pandas as pd
+import numpy as np
 import requests,json,itertools
 
 
@@ -33,7 +34,7 @@ import requests,json,itertools
 # In[90]:
 
 
-company_list=[]
+global company_list
 
 # from selenium import webdriver
 # from webdriver_manager.chrome import ChromeDriverManager
@@ -70,33 +71,34 @@ def get_sc_id(company_name):
 '''
 
 def get_company_list(url,example_list):
-    per_row=[]
-    while(1):
-        try:
-            page_response = requests.get(url, timeout=5)
-            soup = BeautifulSoup(page_response.content,"lxml")
-        except:
-            raise
-            continue
-        else:
-            companies = soup.findAll("a", attrs={"class":"bl_12"})
-            for company in companies:
-                if "moneycontrol" in company["href"]:
-        #             sc_id = get_sc_id(company.text)
-        #             print([company.text,company["href"],sc_id])
-                    print(company.text)
-                    per_row.append(company.text)
-                    per_row.append(company['href'])
-        #             company_list.append([company.text,company["href"]])
-                    for i in example_list:
-                        # print("https://www.moneycontrol.com"+i.replace("igarashimotors",company['href'].split("/")[6]).replace("IM01",company['href'].split("/")[7]).replace("electric-equipment",company['href'].split("/")[5]))
-                        per_row.append("https://www.moneycontrol.com"+i.replace("igarashimotors",company['href'].split("/")[6]).replace("IM01",company['href'].split("/")[7]).replace("electric-equipment",company['href'].split("/")[5]))
-                        # print(company['href'].split("/")[6])
-                        # print(company['href'].split("/")[7])
-                company_list.append(per_row)
-                # print(len(company_list))
-                # print(per_row)
-            break
+    global company_list
+    per_row=np.array([],dtype=object)
+    # while(1):
+    #     try:
+    page_response = requests.get(url, timeout=5)
+    soup = BeautifulSoup(page_response.content,"lxml")
+# except:
+#     raise
+#     continue
+# else:
+    companies = soup.findAll("a", attrs={"class":"bl_12"})
+    for company in companies:
+        if "moneycontrol" in company["href"]:
+#             sc_id = get_sc_id(company.text)
+#             print([company.text,company["href"],sc_id])
+            print(company.text)
+            per_row=np.append(per_row,company.text)
+            per_row=np.append(per_row,company['href'])
+#             company_list.append([company.text,company["href"]])
+            for i in example_list:
+                # print("https://www.moneycontrol.com"+i.replace("igarashimotors",company['href'].split("/")[6]).replace("IM01",company['href'].split("/")[7]).replace("electric-equipment",company['href'].split("/")[5]))
+                per_row=np.append(per_row,"https://www.moneycontrol.com"+i.replace("igarashimotors",company['href'].split("/")[6]).replace("IM01",company['href'].split("/")[7]).replace("electric-equipment",company['href'].split("/")[5]))
+        # print(per_row)
+        company_list=np.append(company_list,per_row)
+        print(len(company_list))
+        # print(per_row)
+            # break
+    return
 # example_list=[]
 # any_page=requests.get("https://www.moneycontrol.com/india/stockpricequote/electric-equipment/igarashimotors/IM01", timeout=5)
 # soup=BeautifulSoup(any_page.content,"lxml")
@@ -111,7 +113,7 @@ def get_company_list(url,example_list):
 
 # In[ ]:
 
-
+company_list=np.array([],dtype=object)
 urls=[]
 incomplete_url="https://www.moneycontrol.com/india/stockpricequote/"
 column_list=['Company Names', 'Company Links']
@@ -129,12 +131,18 @@ with Pool(processes=27) as pool:
     (pool.starmap(get_company_list, zip(urls,itertools.repeat(example_list))))
 # for url in urls:
 #     get_company_list(url,example_list)
+# return
+print("Getting pandas 1")
 print(company_list)
-# df =  pd.DataFrame(company_list)
 
-# df.columns = ['Company Names', 'Company Links']
-# df.columns = column_list
-# df.to_csv('company_list.csv', sep=',', header=None, index=None)
+print("Getting pandas 2")
+
+df =  pd.DataFrame(company_list)
+
+df.columns = ['Company Names', 'Company Links']
+df.columns = column_list
+print("writing data")
+df.to_csv('company_list.csv', sep=',', header=None, index=None)
 
 
 # #### This is the table (only part of it)
