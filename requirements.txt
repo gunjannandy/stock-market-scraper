@@ -1,6 +1,0 @@
-bs4
-fastnumbers
-dill
-scipy
-keras
-tensorflow
