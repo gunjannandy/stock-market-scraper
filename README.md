@@ -116,7 +116,7 @@ The above request will return all price data for ticker AAPL on a 1 day interval
 
 <br/>  
 
-`The above article is taken from `[here](https://stackoverflow.com/a/47505102/8141330)`.`
+`The above article is taken from `**[here](https://stackoverflow.com/a/47505102/8141330)**`.`
 
 <br/>  
 
@@ -136,7 +136,7 @@ For example, on 2017/09/15, SPY paid out a `$1.235` dividend. Yahoo's historical
 
 <br/>  
 
-`The above article is taken from `[here](https://money.stackexchange.com/a/44146)`.`
+`The above article is taken from `**[here](https://money.stackexchange.com/a/44146)**`.`
 
 <br/>  
 
@@ -280,3 +280,432 @@ See the image below, it's `period1` is greater than `0` and `period2` is lesser 
 
 #### Then we need to open our csv file where `yahoo finance tickers` are saved. This is in the `Assets` folder
 <br/>
+
+How did I get this? Well here is the **[direct link](http://investexcel.net/wp-content/uploads/2015/01/Yahoo-Ticker-Symbols-September-2017.zip)** to download the **yahoo ticker list (last updated September 2017)**. It would be helpful for the author if you visit **[his website page](http://investexcel.net/all-yahoo-finance-stock-tickers/)**, as his income is through advertisements, and it takes lots of hours to create this type of ticker list.
+
+All right, moving on.
+
+<br/>
+
+## Important Note:
+
+As I will be working on `India`, I will be using a function which gives me the list of stocks which are from India only. If you are from any other country, just change the `country name`, and it will return a list of stocks that are only of `your country`. This shrinking will help us speed up the program. As the original list contains **106333 stocks**.
+
+
+
+```python
+country_name = "india"
+```
+
+#### Let's now make the funciton to shrink the ticker list.
+
+
+```python
+ticker_file_path = "Assets"+os.sep+"Yahoo Ticker Symbols - September 2017.xlsx"
+temp_df = pd.read_excel(ticker_file_path)
+temp_df.head(10)
+
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Yahoo Stock Tickers</th>
+      <th>Unnamed: 1</th>
+      <th>Unnamed: 2</th>
+      <th>Unnamed: 3</th>
+      <th>Unnamed: 4</th>
+      <th>Unnamed: 5</th>
+      <th>Unnamed: 6</th>
+      <th>Unnamed: 7</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>http://investexcel.net</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Ticker</td>
+      <td>Name</td>
+      <td>Exchange</td>
+      <td>Category Name</td>
+      <td>Country</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>OEDV</td>
+      <td>Osage Exploration and Development, Inc.</td>
+      <td>PNK</td>
+      <td>NaN</td>
+      <td>USA</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Samir Khan</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>AAPL</td>
+      <td>Apple Inc.</td>
+      <td>NMS</td>
+      <td>Electronic Equipment</td>
+      <td>USA</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>simulationconsultant@gmail.com</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>BAC</td>
+      <td>Bank of America Corporation</td>
+      <td>NYQ</td>
+      <td>Money Center Banks</td>
+      <td>USA</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>AMZN</td>
+      <td>Amazon.com, Inc.</td>
+      <td>NMS</td>
+      <td>Catalog &amp; Mail Order Houses</td>
+      <td>USA</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>This ticker symbol list was downloaded from</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>T</td>
+      <td>AT&amp;T Inc.</td>
+      <td>NYQ</td>
+      <td>Telecom Services - Domestic</td>
+      <td>USA</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>http://investexcel.net/all-yahoo-finance-stock...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>GOOG</td>
+      <td>Alphabet Inc.</td>
+      <td>NMS</td>
+      <td>Internet Information Providers</td>
+      <td>USA</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>and was updated on 2nd September 2017</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>MO</td>
+      <td>Altria Group, Inc.</td>
+      <td>NYQ</td>
+      <td>Cigarettes</td>
+      <td>USA</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<br/>
+
+#### See the above list is messy, it contains garbage informations. So refining it we get
+<br/>
+
+
+```python
+temp_df = temp_df.drop(temp_df.columns[[5, 6, 7]], axis=1)
+headers = temp_df.iloc[2]
+df  = pd.DataFrame(temp_df.values[3:], columns=headers)
+df.head(10)
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>2</th>
+      <th>Ticker</th>
+      <th>Name</th>
+      <th>Exchange</th>
+      <th>Category Name</th>
+      <th>Country</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>OEDV</td>
+      <td>Osage Exploration and Development, Inc.</td>
+      <td>PNK</td>
+      <td>NaN</td>
+      <td>USA</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>AAPL</td>
+      <td>Apple Inc.</td>
+      <td>NMS</td>
+      <td>Electronic Equipment</td>
+      <td>USA</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>BAC</td>
+      <td>Bank of America Corporation</td>
+      <td>NYQ</td>
+      <td>Money Center Banks</td>
+      <td>USA</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>AMZN</td>
+      <td>Amazon.com, Inc.</td>
+      <td>NMS</td>
+      <td>Catalog &amp; Mail Order Houses</td>
+      <td>USA</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>T</td>
+      <td>AT&amp;T Inc.</td>
+      <td>NYQ</td>
+      <td>Telecom Services - Domestic</td>
+      <td>USA</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>GOOG</td>
+      <td>Alphabet Inc.</td>
+      <td>NMS</td>
+      <td>Internet Information Providers</td>
+      <td>USA</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>MO</td>
+      <td>Altria Group, Inc.</td>
+      <td>NYQ</td>
+      <td>Cigarettes</td>
+      <td>USA</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>DAL</td>
+      <td>Delta Air Lines, Inc.</td>
+      <td>NYQ</td>
+      <td>Major Airlines</td>
+      <td>USA</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>AA</td>
+      <td>Alcoa Corporation</td>
+      <td>NYQ</td>
+      <td>Aluminum</td>
+      <td>USA</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>AXP</td>
+      <td>American Express Company</td>
+      <td>NYQ</td>
+      <td>Credit Services</td>
+      <td>USA</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<br/>  
+
+#### Let's only take the country which is set to `country_name` previously
+<br/>
+
+
+```python
+new_df = df[df["Country"].str.lower().str.contains(country_name.lower()) == True]
+new_df.to_csv('Assets'+os.sep+country_name+'.csv', sep=',', index=None)
+new_df.head(10)
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>2</th>
+      <th>Ticker</th>
+      <th>Name</th>
+      <th>Exchange</th>
+      <th>Category Name</th>
+      <th>Country</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1230</th>
+      <td>BHARTIARTL.NS</td>
+      <td>Bharti Airtel Limited</td>
+      <td>NSI</td>
+      <td>Wireless Communications</td>
+      <td>India</td>
+    </tr>
+    <tr>
+      <th>1247</th>
+      <td>ASHOKLEY.NS</td>
+      <td>Ashok Leyland Limited</td>
+      <td>NSI</td>
+      <td>Auto Manufacturers - Major</td>
+      <td>India</td>
+    </tr>
+    <tr>
+      <th>1441</th>
+      <td>AUROPHARMA.NS</td>
+      <td>Aurobindo Pharma Limited</td>
+      <td>NSI</td>
+      <td>Drugs - Generic</td>
+      <td>India</td>
+    </tr>
+    <tr>
+      <th>1457</th>
+      <td>AREXMIS.BO</td>
+      <td>Arex Industries Ltd.</td>
+      <td>BSE</td>
+      <td>NaN</td>
+      <td>India</td>
+    </tr>
+    <tr>
+      <th>1586</th>
+      <td>SANWARIA.NS</td>
+      <td>Sanwaria Agro Oils Limited</td>
+      <td>NSI</td>
+      <td>Farm Products</td>
+      <td>India</td>
+    </tr>
+    <tr>
+      <th>1907</th>
+      <td>ALMONDZ.NS</td>
+      <td>Almondz Global Securities Limited</td>
+      <td>NSI</td>
+      <td>Investment Brokerage - National</td>
+      <td>India</td>
+    </tr>
+    <tr>
+      <th>1962</th>
+      <td>ADINATH.BO</td>
+      <td>Adinath Textiles Ltd</td>
+      <td>BSE</td>
+      <td>NaN</td>
+      <td>India</td>
+    </tr>
+    <tr>
+      <th>2897</th>
+      <td>SBIN.NS</td>
+      <td>State Bank of India</td>
+      <td>NSI</td>
+      <td>Money Center Banks</td>
+      <td>India</td>
+    </tr>
+    <tr>
+      <th>3199</th>
+      <td>BPCL.NS</td>
+      <td>Bharat Petroleum Corporation Limited</td>
+      <td>NSI</td>
+      <td>Oil &amp; Gas Refining &amp; Marketing</td>
+      <td>India</td>
+    </tr>
+    <tr>
+      <th>3322</th>
+      <td>MBECL.NS</td>
+      <td>McNally Bharat Engineering Company Limited</td>
+      <td>NSI</td>
+      <td>General Contractors</td>
+      <td>India</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
