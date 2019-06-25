@@ -19,7 +19,7 @@ stock-market-scraper is a tool which downloads all historical stock data in both
 ## Table of Content
 
 * [Getting Started](#getting-started)
-    * [Supported Site](#supported-site)
+    * [Supported Site](#supported-sites)
     * [Configuring Downloads](#configuring-download-list)
 * [Dependencies Installation](#dependencies-installation)
     * [Linux/Debian](#linuxdebian-)
@@ -33,19 +33,20 @@ stock-market-scraper is a tool which downloads all historical stock data in both
 * [Scraping Idea](#lets-see-the-scraping-idea)
     * [Hosts](#hosts)
     * [Fundamental Data](#fundamental-data)
-        * [Query](#inputs-for-the-query)
+        * [Query](#inputs-for-the-modules-query)
         * [Example Query](#example-url)
     * [Options Contracts](#options-contracts)
         * [Example Url](#example-full-url)
     * [Price](#price)
         * [Intervals](#intervals)
-        * [Add pre and post market data](#add-pre-&-post-market-data)
-        * [Add dividents and splits](#add-dividents-&-splits)
-        * [Example](#example-url)
+        * [Add pre and post market data](#add-pre--post-market-data)
+        * [Add dividents and splits](#add-dividends--splits)
+        * [Example](#example-full-query)
     * [Dividents and Splits](#dividents-and-splits)
 * [Understanding Code](#now-lets-get-back-to-some-code-to-get-historic-prices-of-stocks)
     * [Modules](#import-some-modules)
-    * [Checking Internet](#Lets-make-a-code-snippet-which-can-tell-if-we-have-working-internet-connection-or-not)
+    * [Checking Internet](#lets-make-a-code-snippet-which-can-tell-if-we-have-working-internet-connection-or-not)
+    * [Function for pulling and saving historical data](now-write-down-the-function-which-will-get_stock_price-for-given-query_url)
     * [Getting Tickers](#getting-tickers)
 * [Future Plans](#future-plans)
     * [Short Term](#short-term)
@@ -194,7 +195,7 @@ If you plan to use a proxy or persistent connections use `query2.finance.yahoo.c
 
 (substitute your symbol for: AAPL)
 
-#### Inputs for the `?modules=` query:
+### Inputs for the `?modules=` query:
 
 * ```modules = [
    'assetProfile',
@@ -250,7 +251,7 @@ Any valid future expiration represented as a UNIX timestamp can be used in the `
 ### Price
 * `/v8/finance/chart/AAPL?symbol=AAPL&period1=0&period2=9999999999&interval=3mo`  
 
-#### Intervals:
+### Intervals:
 
 * `&interval=3mo` 3 months, going back until initial trading date.
 * `&interval=1d` 1 day, going back until initial trading date.
@@ -265,15 +266,15 @@ How far back you can go with each interval is a little confusing and seems incon
 
 **Note:** *If you query with a `period1=` (start date) that is too far in the past for the interval you've chosen, yahoo will return prices in the `3mo` interval regardless of what interval you requested.*
 
-#### Add pre & post market data
+### Add pre & post market data
 
 `&includePrePost=true`
 
-#### Add dividends & splits
+### Add dividends & splits
 
 `&events=div%2Csplit`
 
-#### Example URL:  
+### Example full query:  
 
 * `https://query1.finance.yahoo.com/v8/finance/chart/AAPL?symbol=AAPL&period1=0&period2=9999999999&interval=1d&includePrePost=true&events=div%2Csplit`  
 
@@ -316,7 +317,7 @@ For example, on 2017/09/15, SPY paid out a `$1.235` dividend. Yahoo's historical
 <br/>  
 
 
-#### Import some modules:  
+### Import some modules:  
 * **urllib**: *To get url data*
 * **json**: *To handle json files*
 * **time**: *To put the program in sleep for some time*
@@ -332,18 +333,18 @@ import urllib.request, json , time, os, difflib, itertools
 import pandas as pd
 from multiprocessing.dummy import Pool
 from datetime import datetime
-```
-
-#### Let's make a code snippet which can tell if we have working internet connection or not
-<br/>
-
-
-```python
 try:
     import httplib
 except:
     import http.client as httplib
+```
 
+### Let's make a code snippet which can tell if we have working internet connection or not
+
+<br/>
+
+
+```python
 def check_internet():
     conn = httplib.HTTPConnection("www.google.com", timeout=5)
     try:
@@ -397,28 +398,31 @@ First let us make a **function** that can pull `json data` from yahoo about that
 ```python
 def get_historic_price(query_url,json_path,csv_path):
     
+    stock_id=query_url.split("&period")[0].split("symbol=")[1]
+
+    if os.path.exists(csv_path+stock_id+'.csv') and os.stat(csv_path+stock_id+'.csv').st_size != 0:
+        print("<<<  Historical data of "+stock_id+" already exists")
+        return
+    
     while not check_internet():
         print("Could not connect, trying again in 5 seconds...")
         time.sleep(5)
-    
-    stock_id=query_url.split("&period")[0].split("symbol=")[1]
-    
-    if os.path.exists(csv_path+stock_id+'.csv') and os.stat(csv_path+stock_id+'.csv').st_size != 0:
-        print("<<<  Historical data of "+stock_id+" already exists, Updating data...")
 
     try:
         with urllib.request.urlopen(query_url) as url:
             parsed = json.loads(url.read().decode())
+    
     except:
         print("|||  Historical data of "+stock_id+" doesn't exist")
         return
     
     else:
-        if os.path.exists(json_path+stock_id+'.json'):
+        if os.path.exists(json_path+stock_id+'.json') and os.stat(json_path+stock_id+'.json').st_size != 0:
             os.remove(json_path+stock_id+'.json')
+        
         with open(json_path+stock_id+'.json', 'w') as outfile:
             json.dump(parsed, outfile, indent=4)
-
+        
         try:
             Date=[]
             for i in parsed['chart']['result'][0]['timestamp']:
@@ -437,10 +441,11 @@ def get_historic_price(query_url,json_path,csv_path):
                 os.remove(csv_path+stock_id+'.csv')
             df.to_csv(csv_path+stock_id+'.csv', sep=',', index=None)
             print(">>>  Historical data of "+stock_id+" saved")
-            return
+        
         except:
-            print(">>>  Historical data of "+stock_id+" exists but has no trading data")
-```
+            print(">>>  Historical data of "+stock_id+" could not be saved")
+        
+        return```
 
 <br/>
 
@@ -511,15 +516,6 @@ All right, moving on.
 
 <br/>
 
-## Important Note:
-
-As I will be working on `India`, I will be using a function which gives me the list of stocks which are from India only. If you are from any other country, just change the `country name`, and it will return a list of stocks that are only of `your country`. This shrinking will help us speed up the program. As the original list contains **`106328 stocks`**.
-
-
-
-```python
-country_name = "india"
-```
 
 #### Let's now make the funciton to shrink the ticker list.
 
@@ -790,166 +786,6 @@ df.head(10)
 
 <br/>  
 
-#### Let's only take the country which is set to `country_name` previously
-<br/>
-
-
-```python
-new_df = df[df["Country"].str.lower().str.contains(country_name.lower()) == True]
-print("Total stocks:",len(new_df))
-new_df.head(10)
-```
-
-    Total stocks: 8984
-    
-
-
-
-
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th>2</th>
-      <th>Ticker</th>
-      <th>Name</th>
-      <th>Exchange</th>
-      <th>Category Name</th>
-      <th>Country</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>1230</th>
-      <td>BHARTIARTL.NS</td>
-      <td>Bharti Airtel Limited</td>
-      <td>NSI</td>
-      <td>Wireless Communications</td>
-      <td>India</td>
-    </tr>
-    <tr>
-      <th>1247</th>
-      <td>ASHOKLEY.NS</td>
-      <td>Ashok Leyland Limited</td>
-      <td>NSI</td>
-      <td>Auto Manufacturers - Major</td>
-      <td>India</td>
-    </tr>
-    <tr>
-      <th>1441</th>
-      <td>AUROPHARMA.NS</td>
-      <td>Aurobindo Pharma Limited</td>
-      <td>NSI</td>
-      <td>Drugs - Generic</td>
-      <td>India</td>
-    </tr>
-    <tr>
-      <th>1457</th>
-      <td>AREXMIS.BO</td>
-      <td>Arex Industries Ltd.</td>
-      <td>BSE</td>
-      <td>NaN</td>
-      <td>India</td>
-    </tr>
-    <tr>
-      <th>1586</th>
-      <td>SANWARIA.NS</td>
-      <td>Sanwaria Agro Oils Limited</td>
-      <td>NSI</td>
-      <td>Farm Products</td>
-      <td>India</td>
-    </tr>
-    <tr>
-      <th>1907</th>
-      <td>ALMONDZ.NS</td>
-      <td>Almondz Global Securities Limited</td>
-      <td>NSI</td>
-      <td>Investment Brokerage - National</td>
-      <td>India</td>
-    </tr>
-    <tr>
-      <th>1962</th>
-      <td>ADINATH.BO</td>
-      <td>Adinath Textiles Ltd</td>
-      <td>BSE</td>
-      <td>NaN</td>
-      <td>India</td>
-    </tr>
-    <tr>
-      <th>2897</th>
-      <td>SBIN.NS</td>
-      <td>State Bank of India</td>
-      <td>NSI</td>
-      <td>Money Center Banks</td>
-      <td>India</td>
-    </tr>
-    <tr>
-      <th>3199</th>
-      <td>BPCL.NS</td>
-      <td>Bharat Petroleum Corporation Limited</td>
-      <td>NSI</td>
-      <td>Oil &amp; Gas Refining &amp; Marketing</td>
-      <td>India</td>
-    </tr>
-    <tr>
-      <th>3322</th>
-      <td>MBECL.NS</td>
-      <td>McNally Bharat Engineering Company Limited</td>
-      <td>NSI</td>
-      <td>General Contractors</td>
-      <td>India</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-<br/>
-
-#### Saving the list of stcks with tickers with `country_name` in a different `csv` file which can be used later.
-
-
-```python
-new_df.to_csv('Assets'+os.sep+country_name+'.csv', sep=',', index=None)
-```
-
- 
-#### Now we got our `tickers` which we can find by company names
-
-<br/>
-
-### Important Note
-We can scrap historical data for every stock mentioned on yahoo finance. But remember the data size. There are about **`8984`** stocks for only `India`. And if you want for every stocks, there is **`106328`** stocks. Which will take huge resources and time.
-Check out my brute force downloader **[stock-market-scraper](stock-market-scraper.py)** for downloading all datasets.
-
-#### List down the company for which the stocks will be downloaded
-<br/>
-
-
-```python
-desired_company_list = [ 'Igarashi Motors' ,
-                        'State Bank of India' ,
-                        'Tata Motors' ,
-                        'Tata Consultancy Services' ]
-```
-
-#### Get the ticker list for the companies user entered in the `desired_company_list`
-<br/>
-
-
-```python
-ticker_list=[]
-for company in desired_company_list:
-    try:
-        exact_company_name = (difflib.get_close_matches(company, new_df['Name'])[0])
-        ticker_for_the_company = new_df.loc[new_df['Name'] == exact_company_name, 'Ticker'].iloc[0]
-        ticker_list.append(ticker_for_the_company)
-    except:
-        print("Company name "+company+" not found.")
-```
-
-<br/>
 
 #### Now create the query urls for the stock `ticker`s. This will bring the query pages, where yahoo finance holds it's historical stock data. 
 
@@ -962,7 +798,7 @@ Example query is like this:  `https://query1.finance.yahoo.com/v8/finance/chart/
 
 ```python
 query_urls=[]
-for ticker in ticker_list:
+for ticker in df['Ticker']:
     query_urls.append("https://query1.finance.yahoo.com/v8/finance/chart/"+ticker+"?symbol="+ticker+"&period1=0&period2=9999999999&interval=1d&includePrePost=true&events=div%2Csplit")
 ```
 
@@ -971,15 +807,15 @@ for ticker in ticker_list:
 
 
 ```python
-with Pool(processes=len(query_urls)) as pool:
+with Pool(processes=10) as pool:
     pool.starmap(get_historic_price, zip(query_urls, itertools.repeat(json_path), itertools.repeat(csv_path)))
-print("All downloads completed !")
+print("<|>  Historical data of all stocks saved")
 ```
 
     <<<  Historical data of SBIN.NS already exists, Updating data...
     <<<  Historical data of IGARASHI.NS already exists, Updating data...
-    <<<  Historical data of TATAMOTORS.NS already exists, Updating data...<<<  Historical data of TCS.NS already exists, Updating data...
-    
+    <<<  Historical data of TATAMOTORS.NS already exists, Updating data...
+    <<<  Historical data of TCS.NS already exists, Updating data...
     >>>  Historical data of TCS.NS saved
     >>>  Historical data of IGARASHI.NS saved
     >>>  Historical data of TATAMOTORS.NS saved
@@ -1032,7 +868,7 @@ If you're here to make suggestions, please follow the basic syntax to post a req
 
 
 
-### Source :
+### Source
 * **[Stack Overflow](https://stackoverflow.com/)**
 * **[Yahoo Finance](https://in.finance.yahoo.com/)**
 * **[Stack Exchange](https://stackexchange.com/)**
