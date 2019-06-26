@@ -4,23 +4,30 @@
 <h1 style="text-align: center;">stock-market-scraper</h1>
 
 <br/>
-<br/>
 
-stock-market-scraper is a tool which downloads all historical stock data in both csv and json formats from **[Yahoo Finance](https://in.finance.yahoo.com/)**. This is for educational and reasearch purposes only.
+#### Always wanted to get live updated historical data of your favourite stocks?   
+
+### ***Say no more!***
+
+**stock-market-scraper** is a command line tool which downloads all historical stock data in both `csv` and `json` formats from **[Yahoo Finance](https://in.finance.yahoo.com/)**. This is for educational and reasearch purposes only.
 
 > Don't overuse this script. It puts loads on [Yahoo Finance](https://in.finance.yahoo.com/) servers.
 
+<br/>
+
 ### This README is for mass downloading with Pyhton Script only. For only selected stock downloads, see the [Jupyter Notebook](https://github.com/Gunjan933/stock-market-scraper/blob/master/stock-market-scraper.ipynb).
 
+<br/>
+<br/>
+<br/>
 
-
-<img src="Assets/cover_image" alt="drawing" />
+<img src="Assets/cover_image.jpg" alt="drawing" />
 
 <br/>
 <br/>
 
 
-## Table of Content
+## Table of Contents
 
 * [Getting Started](#getting-started)
     * [Supported Site](#supported-sites)
@@ -883,7 +890,7 @@ If you're here to make suggestions, please follow the basic syntax to post a req
 
 
 ## License
-[MIT](https://github.com/Gunjan933/stock-market-scraper/blob/master/LICENSE)
+**[MIT](https://github.com/Gunjan933/stock-market-scraper/blob/master/LICENSE)**
 
 
 
