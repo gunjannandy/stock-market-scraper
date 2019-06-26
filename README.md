@@ -46,7 +46,7 @@ stock-market-scraper is a tool which downloads all historical stock data in both
 * [Understanding Code](#now-lets-get-back-to-some-code-to-get-historic-prices-of-stocks)
     * [Modules](#import-some-modules)
     * [Checking Internet](#lets-make-a-code-snippet-which-can-tell-if-we-have-working-internet-connection-or-not)
-    * [Function for pulling and saving historical data](now-write-down-the-function-which-will-get_historic_price-for-given-query_url)
+    * [Function for pulling and saving historical data](#now-write-down-the-function-which-will-get_historic_price-for-given-query_url)
     * [Getting Tickers](#getting-tickers)
 * [Future Plans](#future-plans)
     * [Short Term](#short-term)
