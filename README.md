@@ -46,7 +46,7 @@ stock-market-scraper is a tool which downloads all historical stock data in both
 * [Understanding Code](#now-lets-get-back-to-some-code-to-get-historic-prices-of-stocks)
     * [Modules](#import-some-modules)
     * [Checking Internet](#lets-make-a-code-snippet-which-can-tell-if-we-have-working-internet-connection-or-not)
-    * [Function for pulling and saving historical data](now-write-down-the-function-which-will-get_stock_price-for-given-query_url)
+    * [Function for pulling and saving historical data](now-write-down-the-function-which-will-get_historic_price-for-given-query_url)
     * [Getting Tickers](#getting-tickers)
 * [Future Plans](#future-plans)
     * [Short Term](#short-term)
@@ -389,7 +389,7 @@ First let us make a **function** that can pull `json data` from yahoo about that
 
 <br/>
 
-### Now write down the function which will `get_stock_price` for given `query_url`.
+### Now write down the function which will `get_historic_price` for given `query_url`.
 
 #### It will save the stock data as `json` and `csv` inside a folder named "historic_data"
 <br/>
@@ -879,7 +879,7 @@ If you're here to make suggestions, please follow the basic syntax to post a req
 
 
 ## License
-[MIT](https://github.com/Gunjan933/comicMaker/blob/master/LICENSE)
+[MIT](https://github.com/Gunjan933/stock-market-scraper/blob/master/LICENSE)
 
 
 
