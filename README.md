@@ -12,6 +12,10 @@ stock-market-scraper is a tool which downloads all historical stock data in both
 
 ### This README is for mass downloading with Pyhton Script only. For only selected stock downloads, see the [Jupyter Notebook](https://github.com/Gunjan933/stock-market-scraper/blob/master/stock-market-scraper.ipynb).
 
+
+
+<img src="Assets/cover_image" alt="drawing" />
+
 <br/>
 <br/>
 
