@@ -1,3 +1,4 @@
-json
+pandas
 datetime
-scipy
+json_flatten
+

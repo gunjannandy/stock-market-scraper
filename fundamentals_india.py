@@ -102,7 +102,7 @@ def main():
   with open(ticker_file_path, "r") as f:
     tickers = [line.split(',')[0] for line in f]
 
-  with mp.Pool(processes=mp.cpu_count()) as pool:
+  with mp.Pool(processes=mp.cpu_count()*50) as pool:
     pool.map(get_data, tickers)
 
   return
