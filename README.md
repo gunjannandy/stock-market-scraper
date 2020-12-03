@@ -459,7 +459,7 @@ you see the **ticker** for the stock? It is `IGARASHI.BO`
 
 ![](Assets/chart.png)
 
-<br/>   
+<br/>
 <br/>
 <br/>
 
@@ -574,7 +574,7 @@ period from which we can pull data for the stock. It stores period as
 
 ![](Assets/historic_data.png)
 
-<br/>   
+<br/>
 <br/>
 <br/>
 
@@ -936,18 +936,18 @@ mind.
 
 ### Reporting Issues
 
-If you're going to report an issue, please follow this syntax :  
-**Command You Gave** : What was the command that you used to invoke the issue?  
+If you're going to report an issue, please follow this syntax :
+**Command You Gave** : What was the command that you used to invoke the issue?
 **Expected Behaviour** : After giving the above command, what did you expect
-shoud've happened?  
-**Actual Behaviour** : What actually happened?  
+shoud've happened?
+**Actual Behaviour** : What actually happened?
 **Error Log** : Error Log is mandatory.
 
 ### Suggesting A Feature
 
 If you're here to make suggestions, please follow the basic syntax to post a
-request :  
-**Subject** : Something that briefly tells us about the feature.  
+request :
+**Subject** : Something that briefly tells us about the feature.
 **Long Explanation** : Describe in details what you want and how you want.
 
 ### Source
