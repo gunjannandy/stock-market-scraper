@@ -252,8 +252,8 @@ The `%2C` is the Hex representation of `,` and needs to be inserted between each
 
 #### Example Full URL:
 
-* `https://query2.yahoo.finance.com/v7/finance/options/AAPL` (current expiration)
-* `https://query2.yahoo.finance.com/v7/finance/options/AAPL?date=1579219200` (January 17, 2020 expiration)
+* `https://query2.finance.yahoo.com/v7/finance/options/AAPL` (current expiration)
+* `https://query2.finance.yahoo.com/v7/finance/options/AAPL?date=1579219200` (January 17, 2020 expiration)
 
 Any valid future expiration represented as a UNIX timestamp can be used in the `?date=` query. If you query for the current expiration the JSON response will contain a list of all the valid expirations that can be used in the `?date=` query. ([here is a post explaining converting human readable dates to unix timestamp in Python](https://stackoverflow.com/questions/3682748/converting-unix-timestamp-string-to-readable-date))  
 
