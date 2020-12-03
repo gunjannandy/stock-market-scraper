@@ -149,7 +149,7 @@ After you've saved this script in a directory/folder, you need to open `command 
 * Now, in the command prompt, type this :
 
 ```
-python comicMaker.py
+python stock-market-scraper.py
 ```
 
 
@@ -159,7 +159,7 @@ After you've saved this script in a directory/folder, you need to open `command 
 * Now, change the current working directory of the terminal to the one where you've downloaded this repository.
 * Now, in the Terminal, type this :
 ```
-python comicMaker.py
+python stock-market-scraper.py
 ```
 
 ## Save Location
