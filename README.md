@@ -15,13 +15,15 @@
 
 <br/>
 
-### This README is for mass downloading with Pyhton Script only. For only selected stock downloads, see the [Jupyter Notebook](https://github.com/Gunjan933/stock-market-scraper/blob/master/stock-market-scraper.ipynb).
+### This README is for mass downloading with Python Script only. For only selected stock downloads, see the [Jupyter Notebook](https://github.com/Gunjan933/stock-market-scraper/blob/master/stock-market-scraper.ipynb).
 
 <br/>
 <br/>
 <br/>
 
-<img src="Assets/cover_image.jpg" alt="drawing" />
+<img src="Assets/cover_image.gif" alt="cover-image" />
+
+*Photo by [Igor Kozak for 10Clouds](https://dribbble.com/shots/7126257-Coin-Market-Cap-Animation) on [dribbble](https://dribbble.com/)*
 
 <br/>
 <br/>
@@ -29,46 +31,45 @@
 
 ## Table of Contents
 
-* [Getting Started](#getting-started)
-    * [Supported Site](#supported-sites)
-    * [Configuring Downloads](#configuring-download-list)
-* [Dependencies Installation](#dependencies-installation)
-    * [Linux/Debian](#linuxdebian-)
-    * [Windows](#windows-)
-    * [Mac OS X](#mac-os-x-)
-* [Python Support](#python-support)
-* [Usage](#usage)
-    * [Windows](#windows)
-    * [Linux/Debian](#linuxdebian)
-* [Save Location](#save-location)
-* [Scraping Idea](#lets-see-the-scraping-idea)
-    * [Hosts](#hosts)
-    * [Fundamental Data](#fundamental-data)
-        * [Query](#inputs-for-the-modules-query)
-        * [Example Query](#example-url)
-    * [Options Contracts](#options-contracts)
-        * [Example Url](#example-full-url)
-    * [Price](#price)
-        * [Intervals](#intervals)
-        * [Add pre and post market data](#add-pre--post-market-data)
-        * [Add dividents and splits](#add-dividends--splits)
-        * [Example](#example-full-query)
-    * [Dividents and Splits](#dividents-and-splits)
-* [Understanding Code](#now-lets-get-back-to-some-code-to-get-historic-prices-of-stocks)
-    * [Modules](#import-some-modules)
-    * [Checking Internet](#lets-make-a-code-snippet-which-can-tell-if-we-have-working-internet-connection-or-not)
-    * [Function for pulling and saving historical data](#now-write-down-the-function-which-will-get_historic_price-for-given-query_url)
-    * [Getting Tickers](#getting-tickers)
-* [Future Plans](#future-plans)
-    * [Short Term](#short-term)
-    * [Long Term](#long-term)
-* [Known Bugs](#bugs)
-* [Changelog](#changelog)
-* [Opening An Issue/Requesting A Site](#opening-an-issuerequesting-a-site)
-    * [Reporting Issues](#reporting-issues)
-    * [Suggesting A Feature](#suggesting-a-feature)
-* [Source](#source)
-* [License](#license)
+- [Table of Contents](#table-of-contents)
+- [Getting Started](#getting-started)
+  - [Supported Sites](#supported-sites)
+  - [Configuring download list](#configuring-download-list)
+- [Dependencies Installation](#dependencies-installation)
+  - [Linux/Debian :](#linuxdebian-)
+  - [Windows :](#windows-)
+  - [Mac OS X :](#mac-os-x-)
+- [Python Support](#python-support)
+- [Usage](#usage)
+  - [Windows](#windows)
+  - [Linux/Debian](#linuxdebian)
+- [Save Location](#save-location)
+- [Let's see the scraping idea](#lets-see-the-scraping-idea)
+  - [Hosts:](#hosts)
+  - [Fundamental Data](#fundamental-data)
+  - [Inputs for the `?modules=` query:](#inputs-for-the-modules-query)
+  - [Let's make a code snippet which can tell if we have working internet connection or not](#lets-make-a-code-snippet-which-can-tell-if-we-have-working-internet-connection-or-not)
+  - [Now write down the function which will `get_historic_price` for given `query_url`.](#now-write-down-the-function-which-will-get_historic_price-for-given-query_url)
+    - [It will save the stock data as `json` and `csv` inside a folder named "historic_data"](#it-will-save-the-stock-data-as-json-and-csv-inside-a-folder-named-historic_data)
+    - [First we have to set where the `json` and `csv` files will be saved which have been passed to the function `get_historic_price()`](#first-we-have-to-set-where-the-json-and-csv-files-will-be-saved-which-have-been-passed-to-the-function-get_historic_price)
+    - [Then we have to check if these directory exists, if not, then we will use `os.mkdir`](#then-we-have-to-check-if-these-directory-exists-if-not-then-we-will-use-osmkdir)
+- [Getting tickers](#getting-tickers)
+    - [Then we need to open our csv file where `yahoo finance tickers` are saved. This is in the `Assets` folder](#then-we-need-to-open-our-csv-file-where-yahoo-finance-tickers-are-saved-this-is-in-the-assets-folder)
+    - [Let's now make the funciton to shrink the ticker list.](#lets-now-make-the-funciton-to-shrink-the-ticker-list)
+    - [See the above list is messy, it contains garbage informations. So refining it we get](#see-the-above-list-is-messy-it-contains-garbage-informations-so-refining-it-we-get)
+    - [Now create the query urls for the stock `ticker`s. This will bring the query pages, where yahoo finance holds it's historical stock data.](#now-create-the-query-urls-for-the-stock-tickers-this-will-bring-the-query-pages-where-yahoo-finance-holds-its-historical-stock-data)
+  - [Now get to the stock datas with multithreading.](#now-get-to-the-stock-datas-with-multithreading)
+- [So like this you can update data everyday by yourself](#so-like-this-you-can-update-data-everyday-by-yourself)
+- [Future plans](#future-plans)
+  - [Short term](#short-term)
+  - [Long term](#long-term)
+- [Bugs](#bugs)
+- [Changelog](#changelog)
+- [Opening An Issue/Requesting A Site](#opening-an-issuerequesting-a-site)
+  - [Reporting Issues](#reporting-issues)
+  - [Suggesting A Feature](#suggesting-a-feature)
+  - [Source](#source)
+- [License](#license)
 
 ## Getting Started
 
