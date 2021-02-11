@@ -456,7 +456,8 @@ def get_historic_price(query_url,json_path,csv_path):
         except:
             print(">>>  Historical data of "+stock_id+" could not be saved")
         
-        return```
+        return
+```
 
 <br/>
 
