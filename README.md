@@ -887,6 +887,7 @@ If you're here to make suggestions, please follow the basic syntax to post a req
 * **[Stack Exchange](https://stackexchange.com/)**
 * **[Python](https://www.python.org/)**
 * **[Geeks for Geeks](https://www.geeksforgeeks.org/)**
+* **[Scaler](https://www.scaler.com/topics/)**
 
 
 
